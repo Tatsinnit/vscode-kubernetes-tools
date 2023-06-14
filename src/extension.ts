@@ -128,7 +128,7 @@ export const deleteMessageItems: vscode.MessageItem[] = [
 export const HELM_MODE: vscode.DocumentFilter = { language: "helm", scheme: "file" };
 export const HELM_REQ_MODE: vscode.DocumentFilter = { language: "helm", scheme: "file", pattern: "**/requirements.yaml"};
 export const HELM_CHART_MODE: vscode.DocumentFilter = { language: "helm", scheme: "file", pattern: "**/Chart.yaml" };
-export const HELM_TPL_MODE: vscode.DocumentFilter = { language: "helm", scheme: "file", pattern: "**/templates/*.*" };
+export const HELM_TPL_MODE: vscode.DocumentFilter | null = config.getSkipHelmCompletiongProviderState() ? null : { language: "helm", scheme: "file", pattern: "**/templates/*.*" };
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -316,6 +316,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<APIBro
         treeProvider.initialize()
     ];
 
+    // if (HELM_TPL_MODE) {
+    //     subscriptions.push(vscode.languages.registerCompletionItemProvider(completionFilter, completionProvider));
+    // }
     telemetry.invalidateClusterType(undefined, kubectl);
 
     await azureclusterprovider.init(clusterProviderRegistry, { shell: shell, fs: fs });
@@ -1394,7 +1397,7 @@ async function getContainerQuery(resource: ContainerContainer, containerType: st
         const bits = s.split('\t');
         return { name: bits[0] ? bits[0].trim() : '', image: bits[1] ? bits[1].trim() : '', initContainer: containerType === 'initContainers'};
     });
-    
+
     return containersEx.filter(c => c.name !== '');
 }
 

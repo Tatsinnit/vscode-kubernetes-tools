@@ -6,6 +6,7 @@ import * as exec from './helm.exec';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { existsSync } from 'fs';
+import { getSkipHelmCompletiongProviderState } from './components/config/config';
 
 export class HelmTemplateCompletionProvider implements vscode.CompletionItemProvider {
 
@@ -16,6 +17,10 @@ export class HelmTemplateCompletionProvider implements vscode.CompletionItemProv
     private valuesWatcher: vscode.FileSystemWatcher;
 
     public constructor() {
+        // Before initialization: Check if user has explicitly decided to skipp the helm provider completion disabled.
+        if (getSkipHelmCompletiongProviderState()) {
+            return;
+        }
         // The extension activates on things like 'Kubernetes tree visible',
         // which can occur on any project (not just projects containing k8s
         // manifests or Helm charts). So we don't want the mere initialisation

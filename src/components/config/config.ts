@@ -349,6 +349,10 @@ export function setMinikubeShowInfo(selectedoption: string): void {
     setConfigValue('vs-kubernetes.minikube-show-information-expiration', storedValue);
 }
 
+export function getSkipHelmCompletiongProviderState(): boolean {
+    return vscode.workspace.getConfiguration(EXTENSION_CONFIG_KEY)['skip-helm-provider-completion'];
+}
+
 export function isLogViewerFollowEnabled(): boolean {
     return vscode.workspace.getConfiguration('vscode-kubernetes.log-viewer').get('follow', false);
 }
