@@ -5,7 +5,7 @@ import * as download from '../download/download';
 import * as fs from 'fs';
 import mkdirp = require('mkdirp');
 import * as path from 'path';
-import * as unzipper from 'unzipper';
+import AdmZip from 'adm-zip';
 import * as tar from 'tar';
 import { Shell, Platform } from '../../shell';
 import { Errorable, failed, succeeded } from '../../errorable';
@@ -190,11 +190,32 @@ async function unarchive(sourceFile: string, destinationFolder: string, shell: S
 }
 
 function unzip(sourceFile: string, destinationFolder: string): Promise<Errorable<null>> {
-    return new Promise<Errorable<null>>((resolve, _reject) => {
-        const stream = fs.createReadStream(sourceFile)
-                         .pipe(unzipper.Extract({ path: destinationFolder }));
-        stream.on('close', () => resolve({ succeeded: true, result: null }));
-        stream.on('error', (err) => resolve({ succeeded: false, error: [`zip extract failed: ${err}`] }));
+    return new Promise<Errorable<null>>((resolve) => {
+        try {
+            // Check if the source file exists
+            if (!fs.existsSync(sourceFile)) {
+                return resolve({
+                    succeeded: false,
+                    error: [`Source file not found: ${sourceFile}`],
+                });
+            }
+
+            // Ensure the destination folder exists
+            if (!fs.existsSync(destinationFolder)) {
+                fs.mkdirSync(destinationFolder, { recursive: true });
+            }
+
+            // Initialize AdmZip and extract the files
+            const zip = new AdmZip(sourceFile);
+            zip.extractAllTo(destinationFolder, true);
+
+            resolve({ succeeded: true, result: null });
+        } catch (err) {
+            resolve({
+                succeeded: false,
+                error: [`zip extract failed: ${err instanceof Error ? err.message : String(err)}`],
+            });
+        }
     });
 }
 
