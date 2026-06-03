@@ -46,6 +46,7 @@ import * as telemetry from './telemetry-helper';
 import { dashboardKubernetes } from './components/kubectl/dashboard';
 import { portForwardKubernetes } from './components/kubectl/port-forward';
 import { logsKubernetes } from './components/kubectl/logs';
+import { createHyperlightHyperPod } from './components/hyperlight/hyperlight';
 import { Errorable, failed, succeeded } from './errorable';
 import { Git } from './components/git/git';
 import { DebugSession } from './debug/debugSession';
@@ -197,6 +198,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<APIBro
         registerCommand('extension.vsKubernetesSync', syncKubernetes),
         registerCommand('extension.vsKubernetesExec', execKubernetes),
         registerCommand('extension.vsKubernetesTerminal', terminalKubernetes),
+        registerCommand('extension.vsKubernetesHyperlightEnable', () => { createHyperlightHyperPod(kubectl); }),
         registerCommand('extension.vsKubernetesDiff', diffKubernetes),
         registerCommand('extension.vsKubernetesScale', scaleKubernetes),
         registerCommand('extension.vsKubernetesDebug', debugKubernetes),

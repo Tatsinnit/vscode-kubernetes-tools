@@ -509,6 +509,11 @@
                     "group": "0@3"
                 },
                 {
+                    "command": "extension.vsKubernetesHyperlightEnable",
+                    "when": "view == extension.vsKubernetesExplorer && viewItem =~ /vsKubernetes\\.\\w*cluster($|\\s)/i",
+                    "group": "0@4"
+                },
+                {
                     "command": "extension.vsMinikubeStop",
                     "when": "view == extension.vsKubernetesExplorer && viewItem =~ /vsKubernetes\\.minikubeCluster/i",
                     "group": "2@1"
@@ -608,6 +613,7 @@
                     "group": "2@5",
                     "when": "view == extension.vsKubernetesExplorer && viewItem =~ /vsKubernetes\\.resource\\.pod/i"
                 },
+
                 {
                     "command": "extension.vsKubernetesDebugLocalTunnel",
                     "group": "2@5",
@@ -1040,6 +1046,12 @@
                 "command": "extension.vsKubernetesFollowEvents",
                 "title": "Follow Events",
                 "category": "Kubernetes"
+            },
+            {
+                "command": "extension.vsKubernetesHyperlightEnable",
+                "title": "Create Hyperlight Hyper Pod (Beta Preview)",
+                "category": "Kubernetes",
+                "icon": "$(shield)"
             },
             {
                 "command": "extension.vsKubernetesRefreshHelmRepoExplorer",
